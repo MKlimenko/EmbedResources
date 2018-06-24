@@ -1,11 +1,4 @@
 #include "resource.h"
-#define APSTUDIO_READONLY_SYMBOLS
-#include "winres.h"
-#undef APSTUDIO_READONLY_SYMBOLS
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 IDR_TEXT1               TEXT                    "..\\..\\..\\resources\\very_important_data.txt"
 IDR_TEXT2               TEXT                    "..\\..\\..\\resources\\more_data.txt"
-#endif    // English (United States) resources
