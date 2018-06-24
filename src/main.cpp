@@ -17,6 +17,7 @@ namespace {
 		HGLOBAL hMemory = nullptr;
 
 		Parameters p;
+
 	public:
 		Resource(int resource_id, std::string_view resource_class) {
 			hModule = GetModuleHandle(NULL);
@@ -35,24 +36,20 @@ namespace {
 			return p;
 		}
 
-		template <typename T>
-		auto GetResource() {
-			std::vector<T> dst;
+		auto GetResourceString() {
+			std::string_view dst;
 			if (p.ptr != nullptr)
-				dst = std::vector<T>(reinterpret_cast<T*>(p.ptr), reinterpret_cast<T*>(p.ptr) + p.size_bytes / sizeof(T));
+				dst = std::string_view(reinterpret_cast<char*>(p.ptr), p.size_bytes);
 			return dst;
 		}
 	};
 
 	void GetFile() {
 		Resource very_important(IDR_TEXT1, "TEXT");
-
-		auto dst = very_important.GetResource<char>();
-		auto str = std::string(dst.begin(), dst.end());
+		auto dst = very_important.GetResourceString();
 
 		Resource more_data(IDR_TEXT2, "TEXT");
-		auto dst_2 = more_data.GetResource<char>();
-		auto str_2 = std::string(dst_2.begin(), dst_2.end());
+		auto dst_2 = more_data.GetResourceString();
 	}
 }
 
