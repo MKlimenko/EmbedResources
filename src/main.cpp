@@ -1,8 +1,10 @@
 #include "resource.h"
 #include <Windows.h>
 
+#include <string>
 #include <string_view>
 #include <vector>
+
 
 namespace {
 	class Resource {
@@ -12,31 +14,25 @@ namespace {
 			void* ptr = nullptr;
 		};
 	private:
-		HMODULE hModule = nullptr;
 		HRSRC hResource = nullptr;
 		HGLOBAL hMemory = nullptr;
 
 		Parameters p;
 
 	public:
-		Resource(int resource_id, std::string_view resource_class) {
-			hModule = GetModuleHandle(NULL);
-			hResource = FindResource(hModule, MAKEINTRESOURCE(resource_id), resource_class.data());
-			hMemory = LoadResource(hModule, hResource);
+		Resource(int resource_id, const std::string &resource_class) {
+			hResource = FindResourceA(nullptr, MAKEINTRESOURCEA(resource_id), resource_class.c_str());
+			hMemory = LoadResource(nullptr, hResource);
 
-			p.size_bytes = SizeofResource(hModule, hResource);
+			p.size_bytes = SizeofResource(nullptr, hResource);
 			p.ptr = LockResource(hMemory);
 		}
 
-		~Resource() {
-			FreeResource(hMemory);
-		}
-
-		auto& GetResource() {
+		auto& GetResource() const {
 			return p;
 		}
 
-		auto GetResourceString() {
+		auto GetResourceString() const {
 			std::string_view dst;
 			if (p.ptr != nullptr)
 				dst = std::string_view(reinterpret_cast<char*>(p.ptr), p.size_bytes);
